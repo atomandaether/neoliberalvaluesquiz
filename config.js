@@ -1,6 +1,7 @@
 window.NVQ = {
-  title: "Neoliberal Values Quiz",
+  title: "r/Neoliberal Political Quizslop",
   version: "0.1",
+  feedbackFormUrl: "",
   axes: [
     {
       id: "market",
