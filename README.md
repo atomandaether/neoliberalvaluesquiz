@@ -17,7 +17,8 @@ Static GitHub Pages starter for an exploratory r/neoliberal-centered political v
 - `config.js` — axis definitions and response scale
 - `questions.js` — question bank and axis weights
 - `app.js` — quiz logic and scoring
-- `results.js` — results rendering and JSON export
+- `results.js` — results rendering, empirical group matching, and JSON export
+- `distribution.js` — post-survey calibration data: axis distributions, group shares, and cluster centroids
 - `index.html`, `quiz.html`, `results.html` — pages
 - `style.css` — site styling
 
@@ -34,3 +35,16 @@ Push these files to the repository root, then enable GitHub Pages for the main b
 ## Preparatory-survey note
 
 GitHub Pages is static and cannot itself store respondents' raw answers. `results.js` currently lets a respondent download their response record as JSON. For subreddit-wide data collection, add a submission endpoint (for example, a small serverless function or survey backend) before fielding the preparatory survey.
+
+
+## Distributional calibration
+
+The public results page is already wired for post-survey calibration. Keep `NVQ_DISTRIBUTION.enabled = false` until the collection survey has been analyzed.
+
+When calibration is ready, populate:
+
+- `axisStats` with p10, p25, median, p75, and p90 for each axis.
+- `groups` with an empirical group name, neutral description, sample count, observed share, and seven-axis centroid.
+- `sampleSize` and `updatedAt`, then set `enabled: true`.
+
+The results page will then show the respondent's closest observed group, the group's observed share, subreddit medians and middle-50% ranges, and the full observed group distribution. Group matching is centroid similarity, not a probability or normative ranking.
