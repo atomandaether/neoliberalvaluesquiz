@@ -13,13 +13,17 @@
         <h2>${axis.name}</h2>
         <p>${axis.description}</p>
       </div>
-      <div class="axis-labels">
-        <strong>${axis.a} ${aScore}%</strong>
-        <strong>${bScore}% ${axis.b}</strong>
-      </div>
-      <div class="axis-bar" aria-label="${axis.a} ${aScore} percent; ${axis.b} ${bScore} percent">
-        <div class="axis-bar-a" style="width:${aScore}%"></div>
-        <div class="axis-bar-b" style="width:${bScore}%"></div>
+      <div class="result-row">
+        <div class="pole-badge" style="background:${axis.colorA}">${axis.a}</div>
+        <div class="axis" aria-label="${axis.a} ${aScore} percent; ${axis.b} ${bScore} percent">
+          <div class="bar left" style="width:${aScore}%;background:${axis.colorA}">
+            <div class="text-wrapper">${aScore}%</div>
+          </div>
+          <div class="bar right" style="width:${bScore}%;background:${axis.colorB}">
+            <div class="text-wrapper">${bScore}%</div>
+          </div>
+        </div>
+        <div class="pole-badge" style="background:${axis.colorB}">${axis.b}</div>
       </div>
     `;
     container.appendChild(section);
