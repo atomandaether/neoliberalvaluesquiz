@@ -1,15 +1,26 @@
 window.NVQ_DISTRIBUTION = {
-  // Set to true only after the collection survey has enough usable responses.
+  // Turn this on only after the collection survey has enough usable responses.
   enabled: false,
   version: "pre-calibration",
   sampleSize: 0,
   updatedAt: null,
 
-  // Populate after analysis. Example:
-  // market: { p10: 28, p25: 43, median: 61, p75: 76, p90: 89 }
+  // Per-axis subreddit distribution after calibration.
+  // Example:
+  // market: {
+  //   p10: 28,
+  //   p25: 43,
+  //   median: 61,
+  //   p75: 76,
+  //   p90: 89
+  // }
   axisStats: {},
 
-  // Empirically observed respondent groups. Example schema:
+  // Empirically observed respondent groups.
+  // The results page will rank respondents by centroid distance and also show
+  // each group's observed share of the calibration sample.
+  //
+  // Example:
   // {
   //   id: "market-liberal",
   //   name: "Market Liberal",
