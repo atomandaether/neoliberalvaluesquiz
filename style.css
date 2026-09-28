@@ -432,3 +432,152 @@ p.question {
     min-width: 0;
   }
 }
+
+
+.site-logo {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 8pt;
+}
+
+.creator-footer {
+  text-align: center;
+  margin-top: 34pt;
+  margin-bottom: 16pt;
+}
+
+.creator-footer p {
+  font-size: 15pt;
+}
+
+.creator-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  transition: transform .3s;
+}
+
+.creator-avatar:hover {
+  transform: scale(1.1);
+}
+
+.community-section {
+  margin-top: 34pt;
+}
+
+.distribution-panel {
+  background-color: rgba(254, 252, 249, .45);
+  border-radius: 18pt;
+  padding: 18pt 20pt;
+}
+
+.distribution-panel h2 {
+  text-align: center;
+  margin-top: 0;
+}
+
+.distribution-panel h3 {
+  color: #6B5B42;
+  font-family: 'Equity', Georgia, serif;
+  font-size: 22pt;
+  margin: 22pt 0 10pt;
+}
+
+.calibration-placeholder p {
+  text-align: center;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.closest-group {
+  background: rgba(255,255,255,.42);
+  border-radius: 12pt;
+  padding: 14pt;
+  text-align: center;
+  margin: 12pt 0 18pt;
+}
+
+.group-kicker {
+  color: #6B5B42;
+  font-size: 13pt;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.group-name {
+  color: #4A3C1D;
+  font-family: 'Equity Caps', Georgia, serif;
+  font-size: 30pt;
+  margin-top: 3pt;
+}
+
+.axis-stat-list,
+.group-share-list {
+  display: grid;
+  gap: 12pt;
+}
+
+.axis-stat-row,
+.group-share-row {
+  background: rgba(255,255,255,.32);
+  border-radius: 10pt;
+  padding: 10pt 12pt;
+}
+
+.axis-stat-row span,
+.group-share-label span {
+  color: #6B5B42;
+  font-size: 14pt;
+}
+
+.mini-range {
+  position: relative;
+  height: 16px;
+  margin-top: 8pt;
+  background: rgba(107,91,66,.16);
+  border-radius: 999px;
+  overflow: visible;
+}
+
+.mini-iqr {
+  position: absolute;
+  top: 3px;
+  height: 10px;
+  background: rgba(124,162,184,.65);
+  border-radius: 999px;
+}
+
+.mini-median,
+.mini-you {
+  position: absolute;
+  top: -3px;
+  width: 3px;
+  height: 22px;
+  transform: translateX(-1px);
+}
+
+.mini-median { background: #6B5B42; }
+.mini-you { background: #F8463A; }
+
+.group-share-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12pt;
+  align-items: baseline;
+}
+
+.group-share-track {
+  height: 18px;
+  margin-top: 6pt;
+  background: rgba(107,91,66,.16);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.group-share-fill {
+  height: 100%;
+  background: #7CA2B8;
+  border-radius: 999px;
+}
