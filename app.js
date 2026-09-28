@@ -21,6 +21,16 @@
   const backButton = document.getElementById("back-button");
   const progress = document.getElementById("progress");
 
+  const answerClasses = [
+    "stronglyAgree",
+    "agree",
+    "somewhatAgree",
+    "neutral",
+    "somewhatDisagree",
+    "disagree",
+    "stronglyDisagree"
+  ];
+
   function renderQuestion() {
     const q = questions[qn];
     questionText.textContent = q.text;
@@ -29,9 +39,9 @@
     backButton.disabled = qn === 0;
 
     answerButtons.innerHTML = "";
-    NVQ.answers.forEach((answer) => {
+    NVQ.answers.forEach((answer, index) => {
       const button = document.createElement("button");
-      button.className = "answer-button";
+      button.className = `answer-button ${answerClasses[index]}`;
       button.textContent = answer.label;
       button.addEventListener("click", () => answerQuestion(answer.mult));
       answerButtons.appendChild(button);
