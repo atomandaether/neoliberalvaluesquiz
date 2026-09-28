@@ -6,6 +6,7 @@
   <title>Results | Neoliberal Values</title>
   <link rel="stylesheet" href="style.css">
   <script src="config.js" defer></script>
+  <script src="distribution.js" defer></script>
   <script src="results.js" defer></script>
 </head>
 <body>
@@ -13,14 +14,25 @@
     <h1>Neoliberal Values</h1>
     <hr>
     <h1>Results</h1>
-    <p class="lede compact">These scores reflect the provisional axis definitions in version 0.1.1. They are not yet calibrated to the subreddit population.</p>
+    <p class="lede compact">These scores reflect the provisional axis definitions in version 0.1. They are not yet calibrated to the subreddit population.</p>
+
     <div id="results"></div>
+
+    <section id="community-section" class="community-section"></section>
+
     <div class="result-actions">
       <a class="primary-button" href="quiz.html">Retake quiz</a>
       <button class="secondary-button" id="download-json" type="button">Download response JSON</button>
       <a class="text-link" href="index.html">Back to home</a>
     </div>
-    <p class="version">Version 0.1.1 Beta</p>
+
+    <div class="creator-footer">
+      <p>If you have suggestions or feedback, reach out to <a href="https://www.reddit.com/user/AtomAndAether" target="_blank" rel="noopener">u/AtomAndAether</a></p>
+      <a href="https://www.reddit.com/user/AtomAndAether" target="_blank" rel="noopener">
+        <img src="https://raw.githubusercontent.com/atomandaether/LAWvalues.github.io/main/value_images/atomandaether.png" class="creator-avatar" alt="AtomAndAether">
+      </a>
+      <p class="version">Version 0.1 Beta</p>
+    </div>
   </main>
 </body>
 </html>
