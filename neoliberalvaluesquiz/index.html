@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neoliberal Values Quiz</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js" defer></script>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="eyebrow">r/neoliberal political values project</div>
+      <h1>Neoliberal Values Quiz</h1>
+      <p class="lede">An exploratory values quiz built around political disagreements within and around the r/neoliberal community. The axes are provisional and intended to be recalibrated from respondent data.</p>
+      <a class="primary-button" href="quiz.html">Start quiz</a>
+    </header>
+
+    <section>
+      <h2>Provisional axes</h2>
+      <div id="axis-grid" class="axis-grid"></div>
+    </section>
+  </main>
+
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const grid = document.getElementById("axis-grid");
+      NVQ.axes.forEach((axis) => {
+        const card = document.createElement("article");
+        card.className = "axis-card";
+        card.innerHTML = `
+          <div class="axis-card-name">${axis.name}</div>
+          <div class="axis-card-poles"><strong>${axis.a}</strong><span>↔</span><strong>${axis.b}</strong></div>
+          <p>${axis.description}</p>
+        `;
+        grid.appendChild(card);
+      });
+    });
+  </script>
+</body>
+</html>
