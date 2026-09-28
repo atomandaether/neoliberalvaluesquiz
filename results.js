@@ -1,6 +1,7 @@
 (() => {
   const container = document.getElementById("results");
   const community = document.getElementById("community-section");
+  const referenceSection = document.getElementById("reference-section");
   const params = new URLSearchParams(window.location.search);
   const scores = {};
 
@@ -32,13 +33,21 @@
     container.appendChild(section);
   });
 
-  function groupDistance(group) {
+  function vectorDistance(centroid) {
     const values = NVQ.axes
-      .filter(axis => Number.isFinite(group.centroid?.[axis.id]))
-      .map(axis => scores[axis.id] - group.centroid[axis.id]);
+      .filter(axis => Number.isFinite(centroid?.[axis.id]))
+      .map(axis => scores[axis.id] - centroid[axis.id]);
 
     if (!values.length) return Infinity;
     return Math.sqrt(values.reduce((sum, d) => sum + d * d, 0) / values.length);
+  }
+
+  function rankByDistance(items) {
+    return (items || [])
+      .filter(item => item && item.centroid)
+      .map(item => ({ ...item, distance: vectorDistance(item.centroid) }))
+      .filter(item => Number.isFinite(item.distance))
+      .sort((a, b) => a.distance - b.distance);
   }
 
   function renderCommunityDistribution() {
@@ -47,7 +56,7 @@
     if (!data?.enabled) {
       community.innerHTML = `
         <div class="distribution-panel calibration-placeholder">
-          <h2>Community distribution</h2>
+          <h2>r/neoliberal distribution</h2>
           <p>The collection survey has not been calibrated yet. Once enabled, this section will show the subreddit median and middle range on each axis, observed respondent-group shares, and your nearest empirical group.</p>
         </div>
       `;
@@ -58,14 +67,12 @@
       group && group.centroid && Number.isFinite(group.share)
     );
 
-    const ranked = validGroups
-      .map(group => ({ ...group, distance: groupDistance(group) }))
-      .sort((a, b) => a.distance - b.distance);
-
+    const ranked = rankByDistance(validGroups);
     const closest = ranked[0];
+
     let html = `
       <div class="distribution-panel">
-        <h2>Community distribution</h2>
+        <h2>r/neoliberal distribution</h2>
         <p>Calibration sample: <b>${data.sampleSize.toLocaleString()}</b> usable respondents${data.updatedAt ? ` · updated ${data.updatedAt}` : ""}.</p>
     `;
 
@@ -73,7 +80,7 @@
       const similarity = Math.max(0, Math.round(100 - closest.distance));
       html += `
         <div class="closest-group">
-          <div class="group-kicker">Closest observed group</div>
+          <div class="group-kicker">Closest observed subreddit group</div>
           <div class="group-name">${closest.name}</div>
           <p>${closest.description || ""}</p>
           <p><b>${similarity}% centroid similarity</b> · group share ${Math.round(closest.share * 100)}%</p>
@@ -120,33 +127,147 @@
     community.innerHTML = html;
 
     if (closest) {
-      const stored = sessionStorage.getItem("nvq_result");
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        parsed.groupMatch = {
+      updateStoredResult({
+        subredditGroup: {
           id: closest.id,
           name: closest.name,
           centroidDistance: Number(closest.distance.toFixed(2)),
           observedShare: closest.share
-        };
-        parsed.distributionVersion = data.version;
-        sessionStorage.setItem("nvq_result", JSON.stringify(parsed));
-      }
+        },
+        distributionVersion: data.version
+      });
     }
   }
 
-  renderCommunityDistribution();
+  function renderExternalReferences() {
+    const data = window.NVQ_REFERENCES;
 
-  const downloadButton = document.getElementById("download-json");
-  downloadButton.addEventListener("click", () => {
+    if (!data?.enabled) {
+      referenceSection.innerHTML = `
+        <div class="distribution-panel calibration-placeholder">
+          <h2>Political reference matches</h2>
+          <p>Party and modern-country matching is not calibrated yet. This section will eventually show the closest coded political party across time and geography and the closest present-day country policy/institutional profile.</p>
+        </div>
+      `;
+      return;
+    }
+
+    const parties = rankByDistance(data.parties);
+    const countries = rankByDistance(data.countries);
+    const party = parties[0];
+    const country = countries[0];
+
+    let html = '<div class="distribution-panel"><h2>Political reference matches</h2><div class="reference-grid">';
+
+    if (party) {
+      const years = party.startYear
+        ? `${party.startYear}–${party.endYear ?? "present"}`
+        : "";
+      html += `
+        <div class="reference-card">
+          <div class="group-kicker">Closest party profile</div>
+          <div class="group-name">${party.name}</div>
+          <p><b>${party.country || ""}</b>${years ? ` · ${years}` : ""}</p>
+          <p>${party.description || ""}</p>
+        </div>
+      `;
+    }
+
+    if (country) {
+      html += `
+        <div class="reference-card">
+          <div class="group-kicker">Closest modern-country profile</div>
+          <div class="group-name">${country.name}</div>
+          <p>${country.year ? `Reference year: ${country.year}` : ""}</p>
+          <p>${country.description || ""}</p>
+        </div>
+      `;
+    }
+
+    html += '</div></div>';
+    referenceSection.innerHTML = html;
+
+    updateStoredResult({
+      referenceVersion: data.version,
+      partyMatch: party ? {
+        id: party.id,
+        name: party.name,
+        country: party.country,
+        startYear: party.startYear,
+        endYear: party.endYear,
+        centroidDistance: Number(party.distance.toFixed(2))
+      } : null,
+      countryMatch: country ? {
+        id: country.id,
+        name: country.name,
+        year: country.year,
+        centroidDistance: Number(country.distance.toFixed(2))
+      } : null
+    });
+  }
+
+  function updateStoredResult(fields) {
     const stored = sessionStorage.getItem("nvq_result");
     if (!stored) return;
-    const blob = new Blob([stored], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `neoliberal-values-response-${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  });
+    try {
+      const parsed = JSON.parse(stored);
+      Object.assign(parsed, fields);
+      sessionStorage.setItem("nvq_result", JSON.stringify(parsed));
+    } catch (_) {}
+  }
+
+  function responseText() {
+    const stored = sessionStorage.getItem("nvq_result");
+    if (stored) {
+      try {
+        return JSON.stringify(JSON.parse(stored), null, 2);
+      } catch (_) {
+        return stored;
+      }
+    }
+
+    return JSON.stringify({
+      version: NVQ.version,
+      scores
+    }, null, 2);
+  }
+
+  async function copyResponseData() {
+    const text = responseText();
+    const button = document.getElementById("copy-json");
+    const status = document.getElementById("copy-status");
+
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (_) {
+      const area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.select();
+      document.execCommand("copy");
+      area.remove();
+    }
+
+    button.textContent = "Copied";
+    status.textContent = "Response data copied to your clipboard.";
+    setTimeout(() => {
+      button.textContent = "Copy response data";
+      status.textContent = "";
+    }, 2500);
+  }
+
+  renderCommunityDistribution();
+  renderExternalReferences();
+
+  const copyButton = document.getElementById("copy-json");
+  copyButton.addEventListener("click", copyResponseData);
+
+  const feedbackLink = document.getElementById("feedback-form");
+  if (NVQ.feedbackFormUrl) {
+    feedbackLink.href = NVQ.feedbackFormUrl;
+    feedbackLink.hidden = false;
+  }
 })();
