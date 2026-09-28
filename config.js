@@ -1,6 +1,6 @@
 window.NVQ = {
   title: "Neoliberal Values Quiz",
-  version: "0.1.1",
+  version: "0.1",
   axes: [
     {
       id: "market",
