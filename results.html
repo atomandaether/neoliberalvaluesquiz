@@ -3,26 +3,30 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Results | Neoliberal Values</title>
+  <title>Results | r/Neoliberal Political Quizslop</title>
   <link rel="stylesheet" href="style.css">
   <script src="config.js" defer></script>
   <script src="distribution.js" defer></script>
+  <script src="references.js" defer></script>
   <script src="results.js" defer></script>
 </head>
 <body>
   <main class="page results-page">
-    <h1>Neoliberal Values</h1>
+    <h1>r/Neoliberal Political Quizslop</h1>
     <hr>
     <h1>Results</h1>
-    <p class="lede compact">These scores reflect the provisional axis definitions in version 0.1. They are not yet calibrated to the subreddit population.</p>
+    <p class="lede compact">These scores reflect the provisional axis definitions in version 0.1. They are not yet calibrated to the subreddit population or external political reference set.</p>
 
     <div id="results"></div>
 
     <section id="community-section" class="community-section"></section>
+    <section id="reference-section" class="community-section"></section>
 
     <div class="result-actions">
-      <a class="primary-button" href="quiz.html">Retake quiz</a>
-      <button class="secondary-button" id="download-json" type="button">Download response JSON</button>
+      <button class="primary-button" id="copy-json" type="button">Copy response data</button>
+      <div id="copy-status" class="copy-status" aria-live="polite"></div>
+      <a class="primary-button feedback-button" id="feedback-form" href="#" target="_blank" rel="noopener" hidden>Open feedback form</a>
+      <a class="secondary-button" href="quiz.html">Retake quiz</a>
       <a class="text-link" href="index.html">Back to home</a>
     </div>
 
